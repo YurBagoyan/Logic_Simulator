@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Icons/Copy_Icon.ico</file>
+        <file>Icons/Cut_Icon.ico</file>
+        <file>Icons/Exit_Icon.ico</file>
+        <file>Icons/New_Icon.ico</file>
+        <file>Icons/Open_Icon.ico</file>
+        <file>Icons/Paste_Icon.ico</file>
+        <file>Icons/Print_Icon.ico</file>
+        <file>Icons/Save_Icon.ico</file>
+        <file>Icons/SaveAsIco_100.ico</file>
+        <file>Icons/SaveAsIco_50.ico</file>
+        <file>Icons/About_Icon.ico</file>
+        <file>Icons/AboutQT_Icon.ico</file>
+        <file>Icons/close-button.ico</file>
+        <file>Icons/float-button.ico</file>
+        <file>Icons/tabCloseIco.ico</file>
+        <file>Icons/Logo.ico</file>
+        <file>Icons/Logo_small.ico</file>
+        <file>Images/background.png</file>
+        <file>Icons/Hand.ico</file>
+        <file>Icons/Selection.ico</file>
+        <file>Icons/AddTab.ico</file>
+    </qresource>
+</RCC>
