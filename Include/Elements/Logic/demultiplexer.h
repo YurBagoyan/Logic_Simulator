@@ -1,15 +1,14 @@
-#ifndef AND_H
-#define AND_H
+#ifndef DEMULTIPLEXER_H
+#define DEMULTIPLEXER_H
 
 #include "Include/Elements/element.h"
 
-class And : public Element
-{
+class Demultiplexer final : public Element {
 public:
-    And();
-
-    static constexpr char const *const TYPE{ "gates/and" };
+    static constexpr char const *const TYPE{ "logic/demultiplexer_int" };
     static constexpr string::hash_t const HASH{ string::hash(TYPE) };
+
+    Demultiplexer();
 
     char const *type() const noexcept override { return TYPE; }
     string::hash_t hash() const noexcept override { return HASH; }
@@ -17,4 +16,4 @@ public:
     void calculate() override;
 };
 
-#endif // AND_H
+#endif // DEMULTIPLEXER_H

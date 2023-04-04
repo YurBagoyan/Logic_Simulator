@@ -3,18 +3,18 @@
 
 #include <QObject>
 
-enum class GateType { AND, OR, NOT, NAND, NOR, XOR, XNOR, };
+enum class ElementType { AND, OR, NOT, NAND, NOR, XOR, XNOR, };
 
 class Gate
 {
     //Q_OBJECT
 public:
-    Gate(const GateType type, bool input_1 = false, bool input_2 = false);
+    Gate(const ElementType type, bool input_1 = false, bool input_2 = false);
 
     // Geters
     size_t getId() const;
     QString getName() const;
-    GateType getType() const;
+    ElementType getType() const;
     QString getTypeInString() const;
     bool getInput_1() const;
     bool getInput_2() const;
@@ -31,7 +31,7 @@ protected:
 
 protected:
     size_t m_id;
-    GateType m_type;
+    ElementType m_type;
     QString m_name;
 
     bool m_input_1;

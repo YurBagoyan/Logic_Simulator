@@ -1,34 +1,46 @@
 #ifndef EXPANDERWIDGET_H
 #define EXPANDERWIDGET_H
 
-#include <QFrame>
-#include <QGridLayout>
-#include <QParallelAnimationGroup>
-#include <QScrollArea>
-#include <QToolButton>
-#include <QWidget>
+#include <QIcon>
 #include <QTreeWidget>
 
-class ExpanderWidget : public QWidget {
-    Q_OBJECT
+class ExpanderWidget : public QTreeWidget {
+  Q_OBJECT
+  Q_PROPERTY(int count READ count)
 
-public:
-    explicit ExpanderWidget(QWidget *parent = 0, const QString & title = "", const int animationDuration = 300);
-    void setContentLayout(QLayout & contentLayout);
+ public:
+  explicit ExpanderWidget(QWidget *const a_parent = nullptr);
 
-private:
-    QGridLayout mainLayout;
-    QToolButton toggleButton;
-    QFrame headerLine;
-    QParallelAnimationGroup toggleAnimation;
-    QScrollArea contentArea;
-    int animationDuration{300};
+  int addItem(QWidget *const a_widget, QIcon const &a_iconSet, QString const &a_text);
+  int addItem(QWidget *const a_widget, QString const &a_text);
 
-public:
-    void setTitle(const QString title) {
-        toggleButton.setText(title);
-    }
+  int insertItem(int const a_index, QWidget *const a_widget, QIcon const &a_iconSet, QString const &a_text);
+  int insertItem(int const a_index, QWidget *const a_widget, QString const &a_text);
 
+  int count() const;
+
+  int indexOf(QWidget *const a_widget) const;
+
+  QWidget *widget(int const a_index) const;
+  QIcon itemIcon(int const a_index) const;
+  QString itemText(int const a_index) const;
+
+  void removeItem(int const a_index);
+
+  void setItemIcon(int const a_index, QIcon const &a_icon);
+  void setItemText(int const a_index, QString const &a_text);
+
+ private:
+  void onItemPressed(QTreeWidgetItem *const a_item, int const a_column);
+
+ private:
+  struct WidgetContainer {
+    QString text{};
+    QIcon icon{};
+    QTreeWidgetItem *category{};
+    QWidget *widget{};
+  };
+  QList<WidgetContainer> m_widgets{};
 };
 
 #endif // EXPANDERWIDGET_H

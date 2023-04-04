@@ -12,7 +12,9 @@ public:
     DockWidget(QWidget* parent = nullptr);
 
     void setAction(QAction* action);
+private:
     void closeEvent(QCloseEvent* event);
+    void showEvent(QShowEvent* event);
 
 
 private:

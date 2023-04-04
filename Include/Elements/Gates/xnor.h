@@ -1,15 +1,21 @@
 #ifndef XNORGATE_H
 #define XNORGATE_H
 
-#include "Include/Elements/gate.h"
+#include "Include/Elements/element.h"
 
-class XnorGate : public Gate
+class Xnor : public Element
 {
 public:
-    XnorGate(bool input_1 = false, bool input_2 = false);
+    Xnor();
+
+    static constexpr char const *const TYPE{ "gates/xnor" };
+    static constexpr string::hash_t const HASH{ string::hash(TYPE) };
+
+    char const *type() const noexcept override { return TYPE; }
+    string::hash_t hash() const noexcept override { return HASH; }
 
     void calculate() override;
 
-};;
+};
 
 #endif // XNORGATE_H

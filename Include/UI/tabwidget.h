@@ -5,7 +5,7 @@
 #include <QTabWidget>
 #include <QTabBar>
 #include <QLineEdit>
-#include <QEvent>
+#include "qevent.h"
 
 
 class TabWidget : public QTabWidget
@@ -14,7 +14,7 @@ class TabWidget : public QTabWidget
 public:
     TabWidget(QWidget* parent = nullptr);
     void closeTab(const int index);
-
+    void addNewTab();
 };
 
 class TabBar : public QTabBar
@@ -24,8 +24,8 @@ class TabBar : public QTabBar
 public:
     TabBar(QWidget *parent = nullptr) : QTabBar(parent) { }
 
+private:
     void mouseDoubleClickEvent(QMouseEvent *event);
-    bool eventFilter(QObject *obj, QEvent *event);
 };
 
 
