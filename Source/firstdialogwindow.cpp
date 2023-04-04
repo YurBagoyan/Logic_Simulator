@@ -1,4 +1,4 @@
-#include "firstdialogwindow.h"
+#include "Include/firstdialogwindow.h"
 #include "ui_firstdialogwindow.h"
 
 #include <QCloseEvent>

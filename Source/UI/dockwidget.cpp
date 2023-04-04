@@ -11,8 +11,12 @@ void DockWidget::setAction(QAction* action)
     menuAction = action;
 }
 
-void DockWidget::closeEvent(QCloseEvent* event)
+void DockWidget::closeEvent(QCloseEvent*)
 {
-    Q_UNUSED(event);
     menuAction->setChecked(false);
+}
+
+void DockWidget::showEvent(QShowEvent*)
+{
+    menuAction->setChecked(true);
 }

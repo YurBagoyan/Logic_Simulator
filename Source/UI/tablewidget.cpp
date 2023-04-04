@@ -7,17 +7,15 @@ TableWidget::TableWidget(QWidget* parent)
     : QTableWidget(parent)
 {
     setColumnCount(2);
-    setRowCount(10);
+    //setRowCount(10);
     verticalHeader()->setHidden(true);
     horizontalHeader()->setStretchLastSection(true);
 
     setHeaders();
-    setLabels();
 
-    setAllFieldsReadOnly();
-    setElementFields();
-    setInputFields();
-    setOutputFields();
+    //setElementFields();
+    //setInputFields();
+    //setOutputFields();
 
     setWidgetStyleSheet();
 
@@ -117,6 +115,10 @@ void TableWidget::setWidgetStyleSheet()
                     "}"
 
                     "QTableWidget::item:selected {"
+                    "	background: #1d545c;"
+                    "}"
+
+                    "QTableWidget::item:hover {"
                     "	background: #1d545c;"
                     "}"
 

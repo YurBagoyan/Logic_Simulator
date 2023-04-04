@@ -1,13 +1,14 @@
 #include "Include/UI/tabwidget.h"
-#include "qevent.h"
+#include "Include/UI/graphicsview.h"
+
+#include <QInputDialog>
 
 TabWidget::TabWidget(QWidget* parent)
     : QTabWidget(parent)
 {
     connect(this, &TabWidget::tabCloseRequested, this, &TabWidget::closeTab);
-
-
     this->setTabBar(new TabBar);
+
 }
 
 void TabWidget::closeTab(const int index)
@@ -18,30 +19,31 @@ void TabWidget::closeTab(const int index)
     }
 }
 
+void TabWidget::addNewTab()
+{
+    addTab(new GraphicsView(this), "New Tab");
+}
+
 void TabBar::mouseDoubleClickEvent(QMouseEvent *event)
 {
     int index = tabAt(event->pos());
-    if (index >= 0) {
-        QLineEdit *edit = new QLineEdit(tabText(index), this);
+    if (index != -1) {
+        bool ok;
 
-        connect(edit, &QLineEdit::editingFinished, this, [this, edit, index]() {
-            setTabText(index, edit->text());
-            edit->deleteLater();
-        });
+        QInputDialog* inputDialog = new QInputDialog;
+        inputDialog->setStyleSheet("QInputDialog { background: yellow; }");
 
-        edit->installEventFilter(this);
-        edit->setFocus();
-        edit->show();
-    }
-}
 
-bool TabBar::eventFilter(QObject *obj, QEvent *event)
-{
-    if (event->type() == QEvent::FocusOut) {
-        QLineEdit *edit = qobject_cast<QLineEdit*>(obj);
-        if (edit) {
-            edit->deleteLater();
+        QLineEdit *lineEdit = inputDialog->findChild<QLineEdit*>();
+        if (lineEdit) {
+            lineEdit->setStyleSheet("QLineEdit { background: yellow; }");
+        }
+
+        QString text = inputDialog->getText(this, tr("Rename tab"),
+                                             tr("Enter new name:"), QLineEdit::Normal,
+                                             tabText(index), &ok);
+        if (ok && !text.isEmpty()) {
+            setTabText(index, text);
         }
     }
-    return false;
 }

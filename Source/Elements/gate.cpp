@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-Gate::Gate(const GateType type, bool input_1, bool input_2)
+Gate::Gate(const ElementType type, bool input_1, bool input_2)
     : m_type(type)
     , m_input_1(input_1)
     , m_input_2(input_2)
@@ -25,7 +25,7 @@ QString Gate::getName() const
     return m_name;
 }
 
-GateType Gate::getType() const
+ElementType Gate::getType() const
 {
     return m_type;
 }
@@ -33,13 +33,13 @@ GateType Gate::getType() const
 QString Gate::getTypeInString() const
 {
     switch (m_type) {
-      case GateType::AND: return "AND";
-      case GateType::OR: return "OR";
-      case GateType::NOT: return "NOT";
-      case GateType::NAND: return "NAND";
-      case GateType::NOR: return "NOR";
-      case GateType::XOR: return "XOR";
-      case GateType::XNOR: return "XNOR";
+      case ElementType::AND: return "AND";
+      case ElementType::OR: return "OR";
+      case ElementType::NOT: return "NOT";
+      case ElementType::NAND: return "NAND";
+      case ElementType::NOR: return "NOR";
+      case ElementType::XOR: return "XOR";
+      case ElementType::XNOR: return "XNOR";
       default: return "Unknown";
     }
 }
@@ -61,13 +61,13 @@ void Gate::setNextId()
     static size_t next_xnor_id;
 
     switch (m_type) {
-      case GateType::AND:   m_id = next_and_id++; break;
-      case GateType::OR:    m_id = next_or_id++; break;
-      case GateType::NOT:   m_id = next_not_id++; break;
-      case GateType::NAND:  m_id = next_nand_id++; break;
-      case GateType::NOR:   m_id = next_nor_id++; break;
-      case GateType::XOR:   m_id = next_xor_id++; break;
-      case GateType::XNOR:  m_id = next_xnor_id++; break;
+      case ElementType::AND:   m_id = next_and_id++; break;
+      case ElementType::OR:    m_id = next_or_id++; break;
+      case ElementType::NOT:   m_id = next_not_id++; break;
+      case ElementType::NAND:  m_id = next_nand_id++; break;
+      case ElementType::NOR:   m_id = next_nor_id++; break;
+      case ElementType::XOR:   m_id = next_xor_id++; break;
+      case ElementType::XNOR:  m_id = next_xnor_id++; break;
       default: break;
     }
 

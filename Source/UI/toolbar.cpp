@@ -1,9 +1,10 @@
 #include "Include/UI/toolbar.h"
 
 
-ToolBar::ToolBar(const QString &title, Ui::MainWindow* ui, QWidget* parent)
+ToolBar::ToolBar(const QString &title, Ui::MainWindow* ui, GraphicsView* graphicsView, QWidget* parent)
     : QToolBar(parent)
     , m_ui(ui)
+    , m_graphicsView(graphicsView)
 {
     setWindowTitle(title);
     setMovable(false);
@@ -31,24 +32,29 @@ ToolBar::ToolBar(const QString &title, Ui::MainWindow* ui, QWidget* parent)
 
 }
 
+void ToolBar::setAction(QAction* action)
+{
+    menuAction = action;
+}
+
 void ToolBar::setActions()
 {
     selectMode = new QAction(this);
-    selectMode->setIcon(QIcon(":Icons/Selection.ico"));
+    selectMode->setIcon(QIcon(":Docs/InterfaceIcons/Selection.ico"));
     //selectMode->setShortcut(Qt::CTRL | Qt::Key_H);
     connect(selectMode, &QAction::triggered, this, [this]() {
-            m_ui->graphicsView->setDragMode(QGraphicsView::RubberBandDrag); });
+            m_graphicsView->setDragMode(QGraphicsView::RubberBandDrag); });
 
 
     scrollHandMode = new QAction(this);
-    scrollHandMode->setIcon(QIcon(":Icons/Hand.ico"));
+    scrollHandMode->setIcon(QIcon(":Docs/InterfaceIcons/Hand.ico"));
     scrollHandMode->setShortcut(Qt::CTRL | Qt::Key_H);
     connect(scrollHandMode, &QAction::triggered, this, [this]() {
-            m_ui->graphicsView->setDragMode(QGraphicsView::ScrollHandDrag); });
+            m_graphicsView->setDragMode(QGraphicsView::ScrollHandDrag); });
 
 
     addTab = new QAction(this);
-    addTab->setIcon(QIcon(":Icons/AddTab.ico"));
+    addTab->setIcon(QIcon(":Docs/InterfaceIcons/AddTab.ico"));
     connect(addTab, &QAction::triggered, this, &ToolBar::addNewTab);
 
     // Add actions in tool bar
@@ -61,6 +67,17 @@ void ToolBar::setActions()
 
 void ToolBar::addNewTab()
 {
-    m_ui->tabWidget->addTab(new GraphicsView, "New Tab");
-
+    m_ui->tabWidget->addNewTab();
 }
+
+void ToolBar::closeEvent(QCloseEvent*)
+{
+    menuAction->setChecked(false);
+}
+
+void ToolBar::showEvent(QShowEvent *)
+{
+    menuAction->setChecked(true);
+}
+
+
