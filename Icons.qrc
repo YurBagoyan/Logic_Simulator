@@ -1,25 +1,49 @@
 <RCC>
     <qresource prefix="/">
-        <file>Icons/Copy_Icon.ico</file>
-        <file>Icons/Cut_Icon.ico</file>
-        <file>Icons/Exit_Icon.ico</file>
-        <file>Icons/New_Icon.ico</file>
-        <file>Icons/Open_Icon.ico</file>
-        <file>Icons/Paste_Icon.ico</file>
-        <file>Icons/Print_Icon.ico</file>
-        <file>Icons/Save_Icon.ico</file>
-        <file>Icons/SaveAsIco_100.ico</file>
-        <file>Icons/SaveAsIco_50.ico</file>
-        <file>Icons/About_Icon.ico</file>
-        <file>Icons/AboutQT_Icon.ico</file>
-        <file>Icons/close-button.ico</file>
-        <file>Icons/float-button.ico</file>
-        <file>Icons/tabCloseIco.ico</file>
-        <file>Icons/Logo.ico</file>
-        <file>Icons/Logo_small.ico</file>
-        <file>Images/background.png</file>
-        <file>Icons/Hand.ico</file>
-        <file>Icons/Selection.ico</file>
-        <file>Icons/AddTab.ico</file>
+        <file>Docs/Images/background.png</file>
+        <file>Docs/Images/background_gray.png</file>
+        <file>Docs/Images/background_white.png</file>
+        <file>Docs/GateIcons/Ico 32px/AND.ico</file>
+        <file>Docs/GateIcons/Ico 32px/NAND.ico</file>
+        <file>Docs/GateIcons/Ico 32px/NOR.ico</file>
+        <file>Docs/GateIcons/Ico 32px/NOT.ico</file>
+        <file>Docs/GateIcons/Ico 32px/OR.ico</file>
+        <file>Docs/GateIcons/Ico 32px/XNOR.ico</file>
+        <file>Docs/GateIcons/Ico 32px/XOR.ico</file>
+        <file>Docs/GateIcons/AND.ico</file>
+        <file>Docs/GateIcons/NAND.ico</file>
+        <file>Docs/GateIcons/NOR.ico</file>
+        <file>Docs/GateIcons/NOT.ico</file>
+        <file>Docs/GateIcons/OR.ico</file>
+        <file>Docs/GateIcons/XNOR.ico</file>
+        <file>Docs/GateIcons/XOR.ico</file>
+        <file>Docs/InterfaceIcons/About_Icon.ico</file>
+        <file>Docs/InterfaceIcons/AboutQT_Icon.ico</file>
+        <file>Docs/InterfaceIcons/AddTab.ico</file>
+        <file>Docs/InterfaceIcons/close-button.ico</file>
+        <file>Docs/InterfaceIcons/Copy_Icon.ico</file>
+        <file>Docs/InterfaceIcons/Cut_Icon.ico</file>
+        <file>Docs/InterfaceIcons/Exit_Icon.ico</file>
+        <file>Docs/InterfaceIcons/float-button.ico</file>
+        <file>Docs/InterfaceIcons/Hand.ico</file>
+        <file>Docs/InterfaceIcons/Logo.ico</file>
+        <file>Docs/InterfaceIcons/Logo_small.ico</file>
+        <file>Docs/InterfaceIcons/New_Icon.ico</file>
+        <file>Docs/InterfaceIcons/Open_Icon.ico</file>
+        <file>Docs/InterfaceIcons/Paste_Icon.ico</file>
+        <file>Docs/InterfaceIcons/Print_Icon.ico</file>
+        <file>Docs/InterfaceIcons/Save_Icon.ico</file>
+        <file>Docs/InterfaceIcons/SaveAsIco_100.ico</file>
+        <file>Docs/InterfaceIcons/Selection.ico</file>
+        <file>Docs/InterfaceIcons/tabCloseIco.ico</file>
+        <file>Docs/InterfaceIcons/collapsed.ico</file>
+        <file>Docs/InterfaceIcons/expanded.ico</file>
+        <file>Docs/GateIcons/CLOCK.ico</file>
+        <file>Docs/LogicIcons/inputs.png</file>
+        <file>Docs/LogicIcons/outputs.png</file>
+        <file>Docs/LogicIcons/Unknown.ico</file>
+        <file>Docs/LogicIcons/package.png</file>
+        <file>Docs/LogicIcons/DEMULTIPLEXER.ico</file>
+        <file>Docs/LogicIcons/MULTIPLEXER.ico</file>
     </qresource>
 </RCC>

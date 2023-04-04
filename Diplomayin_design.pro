@@ -25,9 +25,24 @@ SOURCES += \
     Source/Elements/Gates/not.cpp \
     Source/Elements/Gates/or.cpp \
     Source/Elements/Gates/xnor.cpp \
-    Source/Elements/Gates/xor.cpp
+    Source/Elements/Gates/xor.cpp \
+    Source/Elements/element.cpp \
+    Source/UI/listwidget.cpp \
+    Source/Nodes/node.cpp \
+    Source/Nodes/socketitem.cpp \
+    Source/colors.cpp \
+    Source/Nodes/linkitem.cpp \
+    Source/package.cpp \
+    Source/Nodes/nodePackage.cpp \
+    Source/registry.cpp \
+    Source/Elements/Timers/clock.cpp \
+    Source/Elements/Logic/demultiplexer.cpp \
+    Source/Elements/Logic/multiplexer.cpp \
+    Source/Elements/Ui/seven_segment_display.cpp
+
 
 HEADERS += \
+    Include/Elements/Gates/all.h \
     Include/UI/dockwidget.h \
     Include/UI/expanderwidget.h \
     Include/firstdialogwindow.h \
@@ -43,7 +58,21 @@ HEADERS += \
     Include/Elements/Gates/not.h \
     Include/Elements/Gates/or.h \
     Include/Elements/Gates/xnor.h \
-    Include/Elements/Gates/xor.h
+    Include/Elements/Gates/xor.h \
+    Include/Elements/element.h \
+    Include/UI/listwidget.h \
+    Include/Nodes/node.h \
+    Include/Nodes/socketitem.h \
+    Include/colors.h \
+    Include/Nodes/linkitem.h \
+    Include/package.h \
+    Include/strings.h \
+    Include/registry.h \
+    Include/Nodes/nodePackage.h \
+    Include/Elements/Timers/clock.h \
+    Include/Elements/Logic/demultiplexer.h \
+    Include/Elements/Logic/multiplexer.h \
+    Include/Elements/Ui/seven_segment_display.h
 
 FORMS += \
     firstdialogwindow.ui \

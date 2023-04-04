@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normalon>:/Icons/Logo.ico</normalon>
+    <normalon>:/Docs/InterfaceIcons/Logo.ico</normalon>
    </iconset>
   </property>
   <property name="autoFillBackground">
@@ -47,7 +47,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="Icons.qrc">:/Icons/Logo_small.ico</pixmap>
+        <pixmap resource="Icons.qrc">:/Docs/InterfaceIcons/Logo_small.ico</pixmap>
        </property>
        <property name="margin">
         <number>5</number>
