@@ -12,7 +12,7 @@ class ToolBar : public QToolBar
 {
     Q_OBJECT
 public:
-    ToolBar(const QString &title, Ui::MainWindow* ui, GraphicsView* graphicsView, QWidget* parent = nullptr);
+    ToolBar(const QString &title, Ui::MainWindow* ui, QWidget* parent = nullptr);
 
     void setAction(QAction* action);
 

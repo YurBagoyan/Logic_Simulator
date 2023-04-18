@@ -1,7 +1,9 @@
-#ifndef CLOCK_H
-#define CLOCK_H
+#ifndef ELEMENTS_TIMERS_CLOCK_H
+#define ELEMENTS_TIMERS_CLOCK_H
 
 #include "Include/Elements/element.h"
+
+namespace elements::timers {
 
 class Clock : public Element
 {
@@ -26,4 +28,7 @@ private:
     duration_t m_duration{ 500 };
 };
 
-#endif // CLOCK_H
+}
+
+
+#endif // ELEMENTS_TIMERS_CLOCK_H

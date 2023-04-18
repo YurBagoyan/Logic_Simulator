@@ -24,9 +24,9 @@ enum class Color {
     Link,
     Selected,
 
-    LinkLineColor,
-    colorSignalOff,
-    colorSignalOn,
+//    LinkLineColor,
+//    colorSignalOff,
+//    colorSignalOn,
 
     Count
 };

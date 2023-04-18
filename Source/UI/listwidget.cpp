@@ -1,4 +1,5 @@
 #include "Include/UI/listwidget.h"
+#include "Include/mainwindow.h"
 
 #include <QBuffer>
 
@@ -6,16 +7,14 @@ ListWidget::ListWidget(QWidget* parent)
     : QListWidget{}
 {
     setViewMode(QListView::ListMode);
-    setIconSize(QSize(60, 40));
+    setIconSize(QSize(70, 50));
     setSpacing(5);
-    QListWidget::setMinimumSize(0, 400);
 
     setDragEnabled(true);
     setDragDropOverwriteMode(true);
     setDropIndicatorShown(true);
     setDragDropMode(DragOnly);
     setDefaultDropAction(Qt::CopyAction);
-
 
     setStyleSheet(  "QListWidget {"
                     "   background: #2e2f30;"
@@ -68,6 +67,38 @@ ListWidget::ListWidget(QWidget* parent)
 
 }
 
+void ListWidget::doResize()
+{
+    doItemsLayout();
+    setFixedHeight(qMax(contentsSize().height(), 1));
+}
+
+void ListWidget::startDrag(Qt::DropActions supportedActions)
+{
+    (void)supportedActions;
+
+    auto const graphicsView = m_mainWindow->graphicsView();
+    if (!graphicsView) return;
+
+    auto const item = currentItem();
+    auto const TYPE = item->data(ListWidget::MetaDataType).toString();
+    auto const IS_PACKAGE = item->data(ListWidget::MetaDataIsPackage).toByteArray();
+    auto const NAME = item->data(ListWidget::MetaDataName).toByteArray();
+    auto const ICON = item->data(ListWidget::MetaDataIcon).toByteArray();
+    auto const FILE = item->data(ListWidget::MetaDataFilename).toByteArray();
+
+    auto const mimeData = new QMimeData;
+    mimeData->setText(TYPE);
+    mimeData->setData("metadata/is_package", IS_PACKAGE);
+    mimeData->setData("metadata/name", NAME);
+    mimeData->setData("metadata/icon", ICON);
+    mimeData->setData("metadata/filename", FILE);
+
+    auto const drag = new QDrag{ this };
+    drag->setMimeData(mimeData);
+    drag->exec(Qt::CopyAction);
+}
+
 void ListWidget::createDrag(const QPoint &pos, QListWidgetItem* item)
 {
     if(item == nullptr) {
@@ -78,7 +109,7 @@ void ListWidget::createDrag(const QPoint &pos, QListWidgetItem* item)
     auto const type = item->text().toUtf8();
     QString iconPath;
 
-    if(type == "MULTIPLEXER" || type == "DEMULTIPLEXER")
+    if(type == "Multiplexer" || type == "Demultiplexer")
         iconPath = ":Docs/LogicIcons/" + item->text() + ".ico";
     else
          iconPath = ":Docs/GateIcons/" + item->text() + ".ico";
@@ -98,9 +129,6 @@ void ListWidget::createDrag(const QPoint &pos, QListWidgetItem* item)
     drag->setHotSpot(p);
     drag->setPixmap(pix);
     drag->exec(Qt::CopyAction);
+
 }
 
-void ListWidget::mousePressEvent(QMouseEvent *event)
-{
-    createDrag(event->pos(), itemAt(event->pos()));
-}

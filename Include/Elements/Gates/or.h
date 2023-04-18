@@ -3,6 +3,8 @@
 
 #include "Include/Elements/element.h"
 
+namespace elements::gates {
+
 class Or : public Element
 {
 public:
@@ -16,5 +18,7 @@ public:
 
     void calculate() override;
 };
+
+} // namespace elements::gates
 
 #endif // ORGATE_H

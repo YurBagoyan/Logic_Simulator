@@ -1,5 +1,7 @@
 #include "Include/Elements/Gates/xor.h"
 
+namespace elements::gates {
+
 Xor::Xor()
     : Element {}
 {
@@ -10,7 +12,7 @@ Xor::Xor()
     addInput(ValueType::Bool, "#1", IOSocket::CanHoldBool | IOSocket::CanChangeName);
     addInput(ValueType::Bool, "#2", IOSocket::CanHoldBool | IOSocket::CanChangeName);
 
-    addOutput(ValueType::Bool, "State", IOSocket::CanHoldBool | IOSocket::CanChangeName);
+    addOutput(ValueType::Bool, "Output", IOSocket::CanHoldBool | IOSocket::CanChangeName);
 
     setDefaultNewInputFlags(IOSocket::CanHoldBool | IOSocket::CanChangeName);
 }
@@ -26,3 +28,4 @@ void Xor::calculate()
     m_outputs[0].value = result;
 }
 
+} // namespace elements::gates

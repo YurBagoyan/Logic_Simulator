@@ -1,14 +1,14 @@
 #include "Include/UI/toolbar.h"
 
 
-ToolBar::ToolBar(const QString &title, Ui::MainWindow* ui, GraphicsView* graphicsView, QWidget* parent)
+ToolBar::ToolBar(const QString &title, Ui::MainWindow* ui, QWidget* parent)
     : QToolBar(parent)
     , m_ui(ui)
-    , m_graphicsView(graphicsView)
 {
     setWindowTitle(title);
     setMovable(false);
 
+    m_graphicsView = reinterpret_cast<GraphicsView*>(ui->tabWidget->currentWidget());
 
     setStyleSheet(  "QToolBar {"
                     "   background-color: #404142;"
@@ -29,7 +29,6 @@ ToolBar::ToolBar(const QString &title, Ui::MainWindow* ui, GraphicsView* graphic
                     "}" );
 
     setActions();
-
 }
 
 void ToolBar::setAction(QAction* action)
@@ -41,16 +40,18 @@ void ToolBar::setActions()
 {
     selectMode = new QAction(this);
     selectMode->setIcon(QIcon(":Docs/InterfaceIcons/Selection.ico"));
-    //selectMode->setShortcut(Qt::CTRL | Qt::Key_H);
+    selectMode->setShortcut(Qt::Key_V);
     connect(selectMode, &QAction::triggered, this, [this]() {
-            m_graphicsView->setDragMode(QGraphicsView::RubberBandDrag); });
+            auto graphicsView = reinterpret_cast<GraphicsView*>(m_ui->tabWidget->currentWidget());
+            graphicsView->setDragMode(QGraphicsView::RubberBandDrag); });
 
 
     scrollHandMode = new QAction(this);
     scrollHandMode->setIcon(QIcon(":Docs/InterfaceIcons/Hand.ico"));
-    scrollHandMode->setShortcut(Qt::CTRL | Qt::Key_H);
+    scrollHandMode->setShortcut(Qt::Key_H);
     connect(scrollHandMode, &QAction::triggered, this, [this]() {
-            m_graphicsView->setDragMode(QGraphicsView::ScrollHandDrag); });
+            auto graphicsView = reinterpret_cast<GraphicsView*>(m_ui->tabWidget->currentWidget());
+            graphicsView->setDragMode(QGraphicsView::ScrollHandDrag); });
 
 
     addTab = new QAction(this);

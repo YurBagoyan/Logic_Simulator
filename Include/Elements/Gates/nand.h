@@ -1,8 +1,9 @@
 #ifndef NANDGATE_H
 #define NANDGATE_H
 
-
 #include "Include/Elements/element.h"
+
+namespace elements::gates {
 
 class Nand : public Element
 {
@@ -18,5 +19,7 @@ public:
     void calculate() override;
 
 };
+
+} // namespace elements::gates
 
 #endif // NANDGATE_H

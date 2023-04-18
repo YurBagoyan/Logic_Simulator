@@ -5,42 +5,42 @@
 #include <QTreeWidget>
 
 class ExpanderWidget : public QTreeWidget {
-  Q_OBJECT
-  Q_PROPERTY(int count READ count)
+    Q_OBJECT
+    Q_PROPERTY(int count READ count)
 
- public:
-  explicit ExpanderWidget(QWidget *const a_parent = nullptr);
+public:
+    explicit ExpanderWidget(QWidget *const parent = nullptr);
 
-  int addItem(QWidget *const a_widget, QIcon const &a_iconSet, QString const &a_text);
-  int addItem(QWidget *const a_widget, QString const &a_text);
+    int addItem(QWidget *const widget, QIcon const &iconSet, QString const &text);
+    int addItem(QWidget *const widget, QString const &text);
 
-  int insertItem(int const a_index, QWidget *const a_widget, QIcon const &a_iconSet, QString const &a_text);
-  int insertItem(int const a_index, QWidget *const a_widget, QString const &a_text);
+    int insertItem(int const index, QWidget *const widget, QIcon const &iconSet, QString const &text);
+    int insertItem(int const index, QWidget *const widget, QString const &text);
 
-  int count() const;
+    int count() const;
 
-  int indexOf(QWidget *const a_widget) const;
+    int indexOf(QWidget *const widget) const;
 
-  QWidget *widget(int const a_index) const;
-  QIcon itemIcon(int const a_index) const;
-  QString itemText(int const a_index) const;
+    QWidget *widget(int const index) const;
+    QIcon itemIcon(int const index) const;
+    QString itemText(int const index) const;
 
-  void removeItem(int const a_index);
+    void removeItem(int const index);
 
-  void setItemIcon(int const a_index, QIcon const &a_icon);
-  void setItemText(int const a_index, QString const &a_text);
+    void setItemIcon(int const index, QIcon const &icon);
+    void setItemText(int const index, QString const &text);
 
- private:
-  void onItemPressed(QTreeWidgetItem *const a_item, int const a_column);
+private:
+    void onItemPressed(QTreeWidgetItem *const item, int const column);
 
- private:
-  struct WidgetContainer {
-    QString text{};
-    QIcon icon{};
-    QTreeWidgetItem *category{};
-    QWidget *widget{};
-  };
-  QList<WidgetContainer> m_widgets{};
+private:
+    struct WidgetContainer {
+      QString text{};
+        QIcon icon{};
+        QTreeWidgetItem *category{};
+        QWidget *widget{};
+    };
+    QList<WidgetContainer> m_widgets{};
 };
 
 #endif // EXPANDERWIDGET_H

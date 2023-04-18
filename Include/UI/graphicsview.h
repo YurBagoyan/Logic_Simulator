@@ -32,15 +32,14 @@ class TableWidget;
 class QListView;
 class QSortFilterProxyModel;
 
-
 class NodesListModel : public QAbstractListModel {
   Q_OBJECT
 
 public:
-    explicit NodesListModel(QObject *const a_parent);
+    explicit NodesListModel(QObject *const parent);
 
-    int rowCount(QModelIndex const &a_parent = QModelIndex()) const override;
-    QVariant data(QModelIndex const &a_index, int a_role = Qt::DisplayRole) const override;
+    int rowCount(QModelIndex const &parent = QModelIndex()) const override;
+    QVariant data(QModelIndex const &index, int role = Qt::DisplayRole) const override;
 
     void add(Node *const node);
     void remove(Node *const node);
@@ -57,8 +56,7 @@ class GraphicsView : public QGraphicsView
     Q_OBJECT
 public:
     using Nodes = QHash<size_t, Node*>;
-    //GraphicsView(QWidget* parent = nullptr);
-    GraphicsView(QWidget* parent = nullptr, MainWindow* const mainWindow  = nullptr, Package* const package = nullptr);
+    GraphicsView(MainWindow* const mainWindow  = nullptr, Package* const package = nullptr);
     ~GraphicsView();
 
     void open();

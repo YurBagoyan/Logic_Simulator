@@ -31,7 +31,7 @@ public:
     enum class Type { Element, Inputs, Outputs };
     enum class IOSocketsType { Inputs, Outputs };
 
-    explicit Node(QString iconPath = "", QGraphicsItem* parent = nullptr);
+    explicit Node(QGraphicsItem* parent = nullptr);
     ~Node();
 
     QRectF boundingRect() const override;
@@ -54,6 +54,8 @@ public:
     void showCommonProperties();
     void showIOProperties(IOSocketsType const type);
 
+    void changeInputName(int const id, QString const &name);
+    void changeOutputName(int const id, QString const &name);
     void addSocket(SocketType const type, uint8_t const id, QString const &name, ValueType const valueType);
     void removeSocket(SocketType const type);
     void setSocketType(IOSocketsType const socketType, uint8_t const socketId, ValueType const type);
@@ -68,9 +70,10 @@ public: /// Geters and Seters
     void setName(const QString& name);
     void setIcon(const QString& iconPath);
     void setElement(Element* const element);
-    void setPackageView(GraphicsView* const graphicsView) { m_graphicsView = graphicsView; }
+    void setGraphicsView(GraphicsView* const graphicsView) { m_graphicsView = graphicsView; }
     void setPropertiesTable(TableWidget *const properties);
 
+    int type() const override { return NODE_TYPE; }
     QString name() const { return m_name; }
     QString iconPath() const { return m_iconPath; }
     QPixmap icon() const { return m_icon; }
@@ -80,24 +83,30 @@ public: /// Geters and Seters
     Sockets const &inputs() const { return m_inputs; }
     Sockets const &outputs() const { return m_outputs; }
 
+    void setPath(QString const &a_path) { m_path = a_path; }
+    QString path() const { return m_path; }
+
 protected:
-    void setCentralWidget(QGraphicsItem *a_centralWidget);
+    void setCentralWidget(QGraphicsItem *centralWidget);
     void propertiesInsertTitle(QString const &title);
+    void changeIOName(IOSocketsType const type, int const id, QString const &name);
 
 private:
     void addInput();
     void removeInput();
+    void setInputName(uint8_t const socketId, QString const &name);
 
     void addOutput();
     void removeOutput();
+    void setOutputName(uint8_t const socketId, QString const &name);
 
     void updateOutputs();
 
 protected:
-    QGraphicsItem *m_centralWidget{};
+    QGraphicsItem* m_centralWidget{};
     Element* m_element{};
     GraphicsView* m_graphicsView{};
-    TableWidget *m_properties{};
+    TableWidget* m_properties{};
 
 private:
     enum class Mode { Iconified, Expanded } m_mode{};
@@ -105,8 +114,9 @@ private:
     Type m_type;
     bool m_showName{ true };
     QString m_name{};
+    QString m_path{};
     QString m_iconPath{};
-    QPixmap m_icon{m_iconPath};
+    QPixmap m_icon{};
 
     Sockets m_inputs{};
     Sockets m_outputs{};

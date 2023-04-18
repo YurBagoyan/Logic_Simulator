@@ -17,33 +17,33 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() override;
+    ~MainWindow() ;
 
     bool isAppReady() { return !dialogWindow->isRejected(); }
 
     void populateLibrary();
+    void addElement(const QString &category, const QString &name, const QString &type, const QString &icon);
     void deleteElement();
 
     void openOrCreateGraphicsView(Package *const package);
     int openPackageViews() const;
 
+
 public: // Getters and Setters
     void setGraphicsViewTabName(int const index, QString const &name);
-
 
     int graphicsViewIndex() const { return m_graphicsViewIndex; }
     int indexForGraphicsView(GraphicsView *const graphicsView) const;
 
-    GraphicsView *packageView() const { return graphicsViewForIndex(m_graphicsViewIndex); }
+    GraphicsView* graphicsView() const { return graphicsViewForIndex(m_graphicsViewIndex); }
     TableWidget* propertiesTable();
+    QListView* usedElementsList();
 
 protected:
     void showEvent(QShowEvent *event) override;
@@ -55,23 +55,22 @@ protected:
     void showLibrary(bool checked);
     void showProperties(bool checked);
 
+    void removeActions();
+
 private: // Helpers
-    void setItems();
+    QString setToolTip(QString elementName);
     void addElementsToLists();
     QListWidgetItem* createItem(const QString buttonText, const QIcon buttonIcon);
 
     void newPackage();
 
     bool isProjectSaved();
-    void setupGraphicsView();
     void saveProject(const QString &path) const;
-
+    void tabChanged(int const index);
 
 private: // Memebrs
     FirstDialogWindow* dialogWindow;
     Ui::MainWindow *ui;
-
-    GraphicsView* m_graphicsView;
 
     QString m_projectName{"Unnamed"};
     QString m_projectPath;
@@ -98,7 +97,6 @@ private: // Memebrs
     QMap<Package*, int> m_openPackages{};
 
 private slots:
-    void createObject(const QString name, const QString iconPath, const QPointF pos);
     void closeEvent(QCloseEvent *event) override;
 
     /// File menu
@@ -118,5 +116,6 @@ private slots:
     void on_actionUsed_Elements_triggered();
     void on_actionTool_bar_triggered();
 
+    void on_actionDeleteElement_triggered();
 };
 #endif // MAINWINDOW_H

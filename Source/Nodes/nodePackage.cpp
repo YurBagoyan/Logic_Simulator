@@ -13,45 +13,45 @@ NodePackage::NodePackage()
 
 void NodePackage::showProperties()
 {
-    showCommonProperties();
+//    showCommonProperties();
 
-    //auto const package = static_cast<Package *>(m_element);
-   // auto const PATH = QString::fromStdString(std::string(package->packagePath()));
-    //auto const ICON = QString::fromStdString(std::string(package->packageIcon()));
+//    //auto const package = static_cast<Package *>(m_element);
+//    //auto const PATH = QString::fromStdString(std::string(package->packagePath()));
+//    //auto const ICON = QString::fromStdString(std::string(package->packageIcon()));
 
-    propertiesInsertTitle("Package");
+//    propertiesInsertTitle("Package");
 
-    QTableWidgetItem *item{};
+//    QTableWidgetItem *item{};
 
-    int row = m_properties->rowCount();
-     m_properties->insertRow(row);
-    item = new QTableWidgetItem{ "Path" };
-    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
-    m_properties->setItem(row, 0, item);
+//    int row = m_properties->rowCount();
+//     m_properties->insertRow(row);
+//    item = new QTableWidgetItem{ "Path" };
+//    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+//    m_properties->setItem(row, 0, item);
 
-    //QLineEdit *pathEdit = new QLineEdit{ PATH };
-    //pathEdit->setPlaceholderText("<path>");
-    //m_properties->setCellWidget(row, 1, pathEdit);
-//    QObject::connect(pathEdit, &QLineEdit::textChanged,
-//                    [this, package](QString const &a_text) { package->setPackagePath(a_text.toStdString()); });
+//    //QLineEdit *pathEdit = new QLineEdit{ PATH };
+//    //pathEdit->setPlaceholderText("<path>");
+//    //m_properties->setCellWidget(row, 1, pathEdit);
+////    QObject::connect(pathEdit, &QLineEdit::textChanged,
+////                    [this, package](QString const &a_text) { package->setPackagePath(a_text.toStdString()); });
 
-    row = m_properties->rowCount();
-    m_properties->insertRow(row);
-    item = new QTableWidgetItem{ "Icon" };
-    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
-    m_properties->setItem(row, 0, item);
+//    row = m_properties->rowCount();
+//    m_properties->insertRow(row);
+//    item = new QTableWidgetItem{ "Icon" };
+//    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+//    m_properties->setItem(row, 0, item);
 
-    //QLineEdit *iconEdit = new QLineEdit{ ICON };
-    //iconEdit->setPlaceholderText("<icon>");
-    //m_properties->setCellWidget(row, 1, iconEdit);
-//    QObject::connect(iconEdit, &QLineEdit::textChanged, [this](QString const &a_text) {
-//      (void)a_text;
-//      qDebug() << "ICON:" << a_text;
-//      /* TODO */
-//    });
+//    //QLineEdit *iconEdit = new QLineEdit{ ICON };
+//    //iconEdit->setPlaceholderText("<icon>");
+//    //m_properties->setCellWidget(row, 1, iconEdit);
+////    QObject::connect(iconEdit, &QLineEdit::textChanged, [this](QString const &a_text) {
+////      (void)a_text;
+////      qDebug() << "ICON:" << a_text;
+////      /* TODO */
+////    });
 
-    showIOProperties(IOSocketsType::Inputs);
-    showIOProperties(IOSocketsType::Outputs);
+//    showIOProperties(IOSocketsType::Inputs);
+//    showIOProperties(IOSocketsType::Outputs);
 }
 
 void NodePackage::handleEvent(Event const &event)
@@ -73,19 +73,19 @@ void NodePackage::handleEvent(Event const &event)
             }
             break;
         }
-        /*
-//    case EventType::IONameChanged: {
-//      auto const &EVENT = std::get<EventIONameChanged>(a_event.payload);
-//      if (EVENT.input) {
-//        m_inputsNode->outputs()[EVENT.id]->setName(QString::fromStdString(EVENT.to));
-//        m_inputsNode->calculateBoundingRect();
-//      } else {
-//        m_outputsNode->inputs()[EVENT.id]->setName(QString::fromStdString(EVENT.to));
-//        m_outputsNode->calculateBoundingRect();
-//      }
-//      break;
-//    }
-*/
+
+        case EventType::IONameChanged: {
+            auto const &EVENT = std::get<EventIONameChanged>(event.payload);
+            if (EVENT.input) {
+                m_inputsNode->outputs()[EVENT.id]->setName(EVENT.to);
+                m_inputsNode->calculateBoundingRect();
+            } else {
+                m_outputsNode->inputs()[EVENT.id]->setName(EVENT.to);
+                m_outputsNode->calculateBoundingRect();
+            }
+            break;
+        }
+
         case EventType::IOTypeChanged: {
             auto const &EVENT = std::get<EventIOTypeChanged>(event.payload);
             if (EVENT.input)
@@ -138,7 +138,7 @@ void NodePackage::handleEvent(Event const &event)
 bool NodePackage::open()
 {
     auto const mainWindow = m_graphicsView->mainWindow();
-    //mainWindow->openOrCreateGraphicsView(static_cast<package::Package *>(m_element));
+    mainWindow->openOrCreateGraphicsView(static_cast<Package *>(m_element));
 
     return true;
 

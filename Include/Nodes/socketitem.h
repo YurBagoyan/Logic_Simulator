@@ -15,6 +15,8 @@
 class Node;
 class LinkItem;
 
+constexpr int SOCKET_TYPE{ QGraphicsItem::UserType + 3 };
+
 class SocketItem : public QGraphicsItem
 {
 public:
@@ -47,12 +49,13 @@ public: /// Geters and Seters
     void setSocketId(uint8_t const socketId) { m_socketId = socketId; }
     void setColors(QColor const signalOff, QColor const sigalOn);
     void setSignal(bool const signal);
-    ValueType valueType() const { return m_valueType; }
     void setHover(bool const hover) { m_isHover = hover; }
 
+    int type() const override { return SOCKET_TYPE; }
     QString name() const { return m_name; }
     size_t elementId() const { return m_elementId; }
     uint8_t socketId() const { return m_socketId; }
+    ValueType valueType() const { return m_valueType; }
     int nameWidth() const;
 
 protected: /// Events
@@ -87,12 +90,20 @@ private:
 
     QColor m_colorSignalOn{};
     QColor m_colorSignalOff{};
-    bool m_isSignalOn{false};
+    bool m_isSignalOn{};
 
-    bool m_isHover{false};
-    bool m_isDrop{false};
-    bool m_used{false};
-    bool m_nameHidden{false};
+    bool m_isHover{};
+    bool m_isDrop{};
+    bool m_used{};
+    bool m_nameHidden{};
+
+
+//    bool m_isSignalOn{false};
+
+//    bool m_isHover{false};
+//    bool m_isDrop{false};
+//    bool m_used{false};
+//    bool m_nameHidden{false};
 
     QVector<LinkItem *> m_links{};
 };

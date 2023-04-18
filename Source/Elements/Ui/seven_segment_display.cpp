@@ -1,5 +1,7 @@
 #include "Include/Elements/Ui/seven_segment_display.h"
 
+namespace elements::Ui {
+
 SevenSegmentDisplay::SevenSegmentDisplay()
 {
     setMinInputs(8);
@@ -16,3 +18,5 @@ SevenSegmentDisplay::SevenSegmentDisplay()
     addInput(ValueType::Bool, "G", IOSocket::CanHoldBool);
     addInput(ValueType::Bool, "DP", IOSocket::CanHoldBool);
 }
+
+} // namespace elements::ui

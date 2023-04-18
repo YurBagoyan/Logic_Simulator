@@ -3,6 +3,8 @@
 
 #include "Include/Elements/element.h"
 
+namespace elements::gates {
+
 class And : public Element
 {
 public:
@@ -16,5 +18,7 @@ public:
 
     void calculate() override;
 };
+
+} // namespace elements::gates
 
 #endif // AND_H

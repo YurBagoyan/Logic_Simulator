@@ -108,6 +108,7 @@ void TableWidget::setWidgetStyleSheet()
                     "}"
 
                     "TableWidget::item {"
+                        "background: ;"
                         "color: #dbdcdd;"
                     "   border: 0.5px solid #3e3f40;"
                     "   border-top-color: transparent;"
@@ -127,16 +128,21 @@ void TableWidget::setWidgetStyleSheet()
                     "   color: #dbdcdd;"
                     "   padding-left: 4px;"
                     "   border: 0.5px solid #191919;"
-                    "}");
+                    "}"
+                    "QSpinBox{"
+                    "   background: #292a2b;"
+                    "   color: #dbdcdd;"
+                    "   border: transparent;"
+                    "};");
 
 
 }
 
 void TableWidget::setAllFieldsReadOnly()
 {
-//    for (int row = 0; row < this->rowCount(); ++row) {
-//        for (int col = 0; col < this->columnCount(); ++col) {
-//            item(row, col)->setFlags(item(row, col)->flags() &  ~Qt::ItemIsEditable);
-//        }
-//    }
+    for (int row = 0; row < this->rowCount(); ++row) {
+        for (int col = 0; col < this->columnCount(); ++col) {
+            item(row, col)->setFlags(item(row, col)->flags() &  ~Qt::ItemIsEditable);
+        }
+    }
 }

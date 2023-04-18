@@ -1,5 +1,7 @@
 #include "Include/Elements/Timers/clock.h"
 
+namespace elements::timers {
+
 Clock::Clock()
 {
     setMinInputs(0);
@@ -7,7 +9,7 @@ Clock::Clock()
     setMinOutputs(1);
     setMaxOutputs(1);
 
-    addOutput(ValueType::Bool, "State", IOSocket::CanHoldBool);
+    addOutput(ValueType::Bool, "Output", IOSocket::CanHoldBool);
 }
 
 void Clock::update(duration_t const &a_delta)
@@ -19,3 +21,6 @@ void Clock::update(duration_t const &a_delta)
         reset();
     }
 }
+
+} // namespace elements::timers
+

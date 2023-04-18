@@ -3,6 +3,8 @@
 
 #include "Include/Elements/element.h"
 
+namespace elements::gates {
+
 class Nor : public Element
 {
 public:
@@ -17,5 +19,7 @@ public:
     void calculate() override;
 
 };
+
+} // namespace elements::gates
 
 #endif // NORGATE_H

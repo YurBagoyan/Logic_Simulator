@@ -3,6 +3,8 @@
 
 #include "Include/Elements/element.h"
 
+namespace elements::logic {
+
 class Multiplexer final : public Element {
 public:
     static constexpr char const *const TYPE{ "logic/multiplexer_int" };
@@ -16,5 +18,6 @@ public:
     void calculate() override;
 };
 
+} // namespace elements::logic
 
 #endif // MULTIPLEXER_H

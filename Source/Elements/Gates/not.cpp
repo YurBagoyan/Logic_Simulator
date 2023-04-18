@@ -1,4 +1,7 @@
 #include "Include/Elements/Gates/not.h"
+#include "qdebug.h"
+
+namespace elements::gates {
 
 Not::Not()
     : Element {}
@@ -10,12 +13,18 @@ Not::Not()
 
     addInput(ValueType::Bool, "#1", IOSocket::CanHoldBool | IOSocket::CanChangeName);
 
-    addOutput(ValueType::Bool, "State", IOSocket::CanHoldBool | IOSocket::CanChangeName);
+    addOutput(ValueType::Bool, "Output", IOSocket::CanHoldBool | IOSocket::CanChangeName);
 }
 
 void Not::calculate()
 {
-    m_outputs[0].value = !std::get<bool>(m_inputs[0].value);
+    if(m_inputs[0].id != 0) {
+        m_outputs[0].value = !std::get<bool>(m_inputs[0].value);
+    } else {
+        m_outputs[0].value = false;
+    }
 }
+
+} // namespace elements::gates
 
 

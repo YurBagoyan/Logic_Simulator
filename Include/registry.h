@@ -7,6 +7,8 @@
 
 #include "Include/strings.h"
 
+
+
 class Element;
 class Node;
 
@@ -78,13 +80,13 @@ private:
     template<typename T>
     static Element *cloneElement()
     {
-      return new T;
+        return new T;
     }
 
     template<typename T>
     static Node *cloneNode()
     {
-      return new T;
+        return new T;
     }
 
 private:

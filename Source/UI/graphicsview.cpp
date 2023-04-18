@@ -72,20 +72,11 @@ Node *NodesListModel::nodeFor(QModelIndex const &index)
 }
 
 ////////////////   GraphicsView /////////////////////
-//GraphicsView::GraphicsView(QWidget *parent)
-//    : QGraphicsView(parent)
-//{
-//    setGraphicsView();
 
-
-//    //m_properties =  parent->propertiesTable()
-//}
-
-
-GraphicsView::GraphicsView(QWidget* const parent, MainWindow* const mainWindow, Package* const package)
+GraphicsView::GraphicsView(MainWindow* const mainWindow, Package* const package)
     : QGraphicsView( new QGraphicsScene )
     , m_mainWindow { mainWindow }
-    //, m_elements{ mainWindow->elementsList() }
+    , m_elements{ mainWindow->usedElementsList() }
     , m_properties{ mainWindow->propertiesTable() }
     , m_nodesModel{ new NodesListModel{ this } }
     , m_nodesProxyModel{ new QSortFilterProxyModel{ this } }
@@ -93,64 +84,90 @@ GraphicsView::GraphicsView(QWidget* const parent, MainWindow* const mainWindow, 
     , m_scene{ scene() }
     , m_inputs{ new Node() }
     , m_outputs{ new Node() }
-    //, m_standalone{ m_package->package() == nullptr }
+    , m_standalone{ m_package->package() == nullptr }
 {
 
     if (m_standalone) {
         m_packageNode = static_cast<nodes::NodePackage *>(Registry::get().createNode("logic/package"));
         m_package->setNode(m_packageNode);
     } else {
-        //m_packageNode = m_package->node<nodes::NodePackage>();
+        m_packageNode = m_package->node<nodes::NodePackage>();
         qDebug() << "Error: Else else: graphicsVirw: 97";
     }
 
-    //Q_ASSERT(m_package->node<Node*>());
+    Q_ASSERT(m_package->node<Node*>());
 
     setGraphicsView();
 
     m_nodesProxyModel->setSourceModel(m_nodesModel);
 
-    // m_package not inited  <-------------------------
-
     using NodeType = Node::Type;
     m_inputs->setType(NodeType::Inputs);
-    //m_inputs->setPos(m_package->inputsPosition().x, m_package->inputsPosition().y);
-    //m_inputs->setElement(m_package);
+    m_inputs->setPos(m_package->inputsPosition().x, m_package->inputsPosition().y);
+    m_inputs->setElement(m_package);
     m_inputs->setIcon(":Docs/LogicIcons/inputs.png");
-    m_inputs->setPackageView(this);
+    m_inputs->setGraphicsView(this);
     m_inputs->iconify();
     m_outputs->setType(NodeType::Outputs);
-    //m_outputs->setPos(m_package->outputsPosition().x, m_package->outputsPosition().y);
-    //m_outputs->setElement(m_package);
+    m_outputs->setPos(m_package->outputsPosition().x, m_package->outputsPosition().y);
+    m_outputs->setElement(m_package);
     m_outputs->setIcon(":Docs/LogicIcons/outputs.png");
-    m_outputs->setPackageView(this);
+    m_outputs->setGraphicsView(this);
     m_outputs->iconify();
 
-//    m_packageNode->setInputsNode(m_inputs);
-//    m_packageNode->setOutputsNode(m_outputs);
-//    m_packageNode->setElement(m_package);
+    m_packageNode->setInputsNode(m_inputs);
+    m_packageNode->setOutputsNode(m_outputs);
+    m_packageNode->setElement(m_package);
 
-//    if (m_package->name().isEmpty()) { // <-----------------------
-//        auto &registry = Registry::get();
-//        m_package->setName(registry.elementName("logic/package"));
-//    }
+    if (m_package->name().isEmpty()) { // <-----------------------
+        auto &registry = Registry::get();
+        m_package->setName(registry.elementName("logic/package"));
+    }
 
     m_scene->addItem(m_inputs);
     m_scene->addItem(m_outputs);
 
     m_timer.setInterval(1000 / 60);
 
-    //connect(&m_timer, &QTimer::timeout, [this]() { m_scene->advance(); });
+    connect(&m_timer, &QTimer::timeout, this, [this]() { m_scene->advance(); });
     m_timer.start();
+
+    if (m_standalone) m_package->startDispatchThread();
 }
 
 GraphicsView::~GraphicsView()
 {
     m_timer.stop();
     if (m_standalone) {
-        //m_package->quitDispatchThread();
+        m_package->quitDispatchThread();
         delete m_package;
     }
+}
+
+void GraphicsView::setGraphicsView()
+{
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+    setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
+    setOptimizationFlags(QGraphicsView::DontSavePainterState | QGraphicsView::DontAdjustForAntialiasing);
+    //setDragMode(QGraphicsView::ScrollHandDrag);
+
+    setResizeAnchor(QGraphicsView::NoAnchor);
+    setTransformationAnchor(QGraphicsView::AnchorViewCenter);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+
+    m_scene = new QGraphicsScene();
+    m_scene->setItemIndexMethod(QGraphicsScene::NoIndex);
+    m_scene->setSceneRect(500, 500, 3000, 2000);
+    //m_scene->setBackgroundBrush(QPixmap(":/Images/GateIcons/background_white.png"));
+    m_scene->setObjectName("GraphicsViewScene");
+
+    m_inputs->setPropertiesTable(m_properties);
+    m_outputs->setPropertiesTable(m_properties);
+    m_packageNode->setPropertiesTable(m_properties);
+
+    setAcceptDrops(true);
+    setScene(m_scene);
 }
 
 void GraphicsView::open()
@@ -175,10 +192,10 @@ void GraphicsView::open()
         m_nodes[element->id()] = node;
 
         element->isIconified() ? node->iconify() : node->expand();
-        node->setPackageView(this);
+        node->setGraphicsView(this);
         node->setPropertiesTable(m_properties);
         node->setName(nodeName);
-        //node->setPath(nodePath);
+        node->setPath(nodePath);
         node->setIcon(nodeIcon);
         node->setPos(element->position().x, element->position().y);
         node->setElement(element);
@@ -232,74 +249,39 @@ void GraphicsView::wheelEvent(QWheelEvent *event)
     event->accept();
 }
 
-void GraphicsView::setGraphicsView()
-{
-    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-    setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
-    setOptimizationFlags(QGraphicsView::DontSavePainterState | QGraphicsView::DontAdjustForAntialiasing);
-    //setDragMode(QGraphicsView::ScrollHandDrag);
-
-    setResizeAnchor(QGraphicsView::NoAnchor);
-    setTransformationAnchor(QGraphicsView::AnchorViewCenter);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-
-    m_scene = new QGraphicsScene();
-    m_scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-    setSceneRect(500, 500, 3000, 2000);
-    //m_scene->setBackgroundBrush(QPixmap(":/Images/GateIcons/background_white.png"));
-    m_scene->setObjectName("GraphicsViewScene");
-
-    m_inputs->setPropertiesTable(m_properties);
-    m_outputs->setPropertiesTable(m_properties);
-    m_packageNode->setPropertiesTable(m_properties);
-
-    setAcceptDrops(true);
-    setScene(m_scene);
-}
-
-
-
 void GraphicsView::dragEnterEvent(QDragEnterEvent *event)
 {
     event->accept();
     event->acceptProposedAction();
 
+    auto const mimeData = event->mimeData();
 
-    //auto const mimeData = event->mimeData();
+    if (mimeData->hasFormat("metadata/name") && mimeData->hasFormat("metadata/icon")) {
+        auto const isPackage = mimeData->data("metadata/is_package") == "true";
+        auto const pathString = isPackage ? QString{ "logic/package" } : mimeData->text();
+        auto const name = mimeData->data("metadata/name");
+        auto const icon = mimeData->data("metadata/icon");
+        auto const file = mimeData->data("metadata/filename");
+        auto const stringData = pathString.toLatin1();
+        auto const path = stringData.data();
 
-    //  mimeData->setData("metadata/is_package", IS_PACKAGE);
-    //  mimeData->setData("metadata/name", NAME);
-    //  mimeData->setData("metadata/icon", ICON);
-    //  mimeData->setData("metadata/filename", FILE);
+        auto const DROP_POSITION = mapToScene(event->pos());
 
-//    if (mimeData->hasFormat("metadata/name") && mimeData->hasFormat("metadata/icon")) {
-//        auto const isPackage = mimeData->data("metadata/is_package") == "true";
-//        auto const pathString = isPackage ? QString{ "logic/package" } : mimeData->text();
-//        auto const name = mimeData->data("metadata/name");
-//        auto const icon = mimeData->data("metadata/icon");
-//        auto const file = mimeData->data("metadata/filename");
-//        auto const stringData = pathString.toLatin1();
-//        auto const path = stringData.data();
+        Registry &registry{ Registry::get() };
 
-//        auto const DROP_POSITION = mapToScene(event->pos());
-
-//        Registry &registry{ Registry::get() };
-
-//        assert(m_dragNode == nullptr);
-//        m_dragNode = registry.createNode(path);
-//        ->setPackageView(this);
-//        m_dragNode->setPropertiesTable(m_properties);
-//        m_dragNode->setName(name);
-//        m_dragNode->setPath(isPackage ? name : "");
-//        m_dragNode->setIcon(icon);
-//        m_dragNode->setPos(DROP_POSITION);
-//        m_scene->addItem(m_dragNode);
-//        m_dragNode->calculateBoundingRect();
-//        event->accept();
-//    } else {
-
-    QGraphicsView::dragEnterEvent(event);
+        assert(m_dragNode == nullptr);
+        m_dragNode = registry.createNode(path);
+        m_dragNode->setGraphicsView(this);
+        m_dragNode->setPropertiesTable(m_properties);
+        m_dragNode->setName(name);
+        m_dragNode->setPath(isPackage ? name : "");
+        m_dragNode->setIcon(icon);
+        m_dragNode->setPos(DROP_POSITION);
+        m_scene->addItem(m_dragNode);
+        m_dragNode->calculateBoundingRect();
+        event->accept();
+    } else
+        QGraphicsView::dragEnterEvent(event);
 
 }
 
@@ -335,49 +317,40 @@ void GraphicsView::dropEvent(QDropEvent *event)
     }
 
     auto const mimeData = event->mimeData();
-    QString const name =  mimeData->data("metadata/name");
-    QString const iconPath = mimeData->data("metadata/icon");
+    if (mimeData->hasFormat("metadata/name") && mimeData->hasFormat("metadata/icon")) {
+        m_package->pauseDispatchThread();
 
-    if(name.isEmpty() || iconPath.isEmpty()) {
-        // For lines
-        QGraphicsView::dropEvent(event);
-        return;
+        auto const isPackage = mimeData->data("metadata/is_package") == "true";
+        auto const file = mimeData->data("metadata/filename");
+        auto const pathString = event->mimeData()->text();
+        auto const stringData = pathString.toLatin1();
+        char const *const path{ isPackage ? "logic/package" : stringData.data() };
+
+        auto const element = m_package->add(path);
+        element->setNode(m_dragNode);
+
+        if (element->name().isEmpty())
+            element->setName(m_dragNode->name());
+
+
+        if (isPackage) {
+            //auto const package = static_cast<package::Package *>(element);
+            //package->open(QString{ file });
+        }
+
+        m_dragNode->setElement(element);
+        m_dragNode->iconify();
+        m_dragNode->expand();
+
+        m_nodes[element->id()] = m_dragNode;
+        m_nodesModel->add(m_dragNode);
+        m_nodesProxyModel->sort(0);
+
+        m_dragNode = nullptr;
+
+        m_package->resumeDispatchThread();
     }
 
-
-//    if (mimeData->hasFormat("metadata/name") && mimeData->hasFormat("metadata/icon")) {
-//        //m_package->pauseDispatchThread();
-
-//        auto const isPackage = mimeData->data("metadata/is_package") == "true";
-//        auto const file = mimeData->data("metadata/filename");
-//        auto const pathString = event->mimeData()->text();
-//        auto const stringData = pathString.toLatin1();
-//        char const *const path{ isPackage ? "logic/package" : stringData.data() };
-
-//        auto const element = m_package->add(path);
-//        element->setNode(m_dragNode);
-//        if (element->name().isEmpty()) element->setName(m_dragNode->name());
-//        if (isPackage) {
-//            //auto const package = static_cast<package::Package *>(element);
-//            //package->open(QString{ file });
-//        }
-
-//        m_dragNode->setElement(element);
-//        m_dragNode->iconify();
-
-//        m_nodes[element->id()] = m_dragNode;
-//        m_nodesModel->add(m_dragNode);
-//        m_nodesProxyModel->sort(0);
-
-//        m_dragNode = nullptr;
-
-//        //m_package->resumeDispatchThread();
-//    }
-
-    QPoint eventPos = event->position().toPoint();
-    QPointF scenePos = mapToScene(eventPos);
-
-    emit itemDrop(name, iconPath, scenePos);
     QGraphicsView::dropEvent(event);
 }
 
@@ -524,6 +497,8 @@ void GraphicsView::showProperties()
     m_properties->setColumnCount(2);
     m_properties->setHorizontalHeaderLabels(QString("Name;Value").split(";"));
 
+    if(!m_selectedNode) return;
+
     m_selectedNode->showProperties();
     m_properties->horizontalHeader()->setStretchLastSection(true);
 }
@@ -531,7 +506,7 @@ void GraphicsView::showProperties()
 void GraphicsView::setSelectedNode(Node *const node)
 {
     if (node == nullptr) {
-        //m_selectedNode = m_packageNode;
+        m_selectedNode = m_packageNode;
     } else
         m_selectedNode = node;
 }

@@ -39,20 +39,20 @@ QColor get_color(Color const color)
         case Color::SocketInput:        return QColor{ 255, 99, 71, 255 };
         case Color::SocketOutput:       return QColor{ 135, 206, 235, 255 };
         case Color::SocketDrop:         return QColor{ 173, 255, 47, 255 };
-        case Color::SocketHover:        return QColor{ 0, 170, 238, 255 };
-        case Color::BoolSignalOff:      return QColor{ 244, 53, 64, 255 };
-        case Color::BoolSignalOn:       return QColor{ 66, 245, 66, 255 };
+        case Color::SocketHover:        return QColor{ 0, 170, 238, 255 }; // 255, 215, 0, 255
+        case Color::BoolSignalOff:      return QColor{ 244, 53, 64, 255 }; // 244, 53, 64, 255
+        case Color::BoolSignalOn:       return QColor{ 66, 245, 66, 255 }; // 66, 245, 66, 255
         case Color::IntegerSignalOff:   return QColor{ 62, 84, 174, 255 };
         case Color::IntegerSignalOn:    return QColor{ 0, 170, 238, 255 };
         case Color::FloatSignalOff:     return QColor{ 111, 80, 96, 255 };
         case Color::FloatSignalOn:      return QColor{ 254, 144, 50, 255 };
         //case Color::FloatSignalOn:    return QColor{ 232, 0, 99, 255 };
         case Color::Link:               return QColor{ 165, 165, 165, 64 };
-        case Color::Selected:           return QColor{ 0, 170, 238, 255 };
+        case Color::Selected:           return QColor{ 0, 170, 238, 255 }; //
 
-        case Color::LinkLineColor:      return QColor{ 255, 215, 0, 255 };
-        case Color::colorSignalOff:     return QColor{ 254, 144, 50, 255 };
-        case Color::colorSignalOn:      return QColor{ 52, 217, 200, 255 };
+        //case Color::LinkLineColor:      return QColor{ 255, 215, 0, 255 };
+        //case Color::colorSignalOff:     return QColor{ 254, 144, 50, 255 };
+        //case Color::colorSignalOn:      return QColor{ 52, 217, 200, 255 };
         case Color::Count: break;
     }
 

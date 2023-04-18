@@ -1,5 +1,7 @@
 #include "Include/Elements/Logic/demultiplexer.h"
 
+namespace elements::logic {
+
 Demultiplexer::Demultiplexer()
   : Element{}
 {
@@ -28,3 +30,5 @@ void Demultiplexer::calculate()
 
     m_outputs[static_cast<size_t>(INDEX)].value = VALUE;
 }
+
+} // namespace elements::logic

@@ -75,7 +75,7 @@
 }</string>
        </property>
        <property name="text">
-        <string>Welcome to my application</string>
+        <string>Welcome</string>
        </property>
       </widget>
      </item>

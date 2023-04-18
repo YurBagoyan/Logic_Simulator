@@ -1,16 +1,9 @@
 #include "Include/Elements/element.h"
 #include "Include/package.h"
 
-#include "qdebug.h"
-
 void Element::iconify(const bool iconify)
 {
-    qDebug() << "before";
-
-    if(m_isIconified) {
-        qDebug() << "done";
-        m_isIconified = iconify;
-    }
+    m_isIconified = iconify;
 }
 
 bool Element::connect(const size_t sourceId, const uint8_t outputId, const uint8_t inputId)
@@ -106,6 +99,20 @@ void Element::setName(const QString &name)
     handleEvent(Event{ EventType::ElementNameChanged, EventNameChanged{ OLD_NAME, name } });
 }
 
+void Element::setIOValueType(const bool input, const uint8_t id, const ValueType type)
+{
+    auto &io = input ? m_inputs[id] : m_outputs[id];
+    ValueType const OLD_TYPE = io.type;
+
+    if (OLD_TYPE == type) return;
+
+    io.type = type;
+    resetIOSocketValue(io);
+
+
+    handleEvent(Event{ EventType::IOTypeChanged, EventIOTypeChanged{ input, id, OLD_TYPE, type }});
+}
+
 void Element::setPosition(const double x, const double y)
 {
     m_position.x = x;
@@ -161,16 +168,3 @@ void Element::setMaxOutputs(uint8_t const max)
     m_maxOutputs = max;
 }
 
-void Element::setIOValueType(const bool input, const uint8_t id, const ValueType type)
-{
-    auto &io = input ? m_inputs[id] : m_outputs[id];
-    ValueType const OLD_TYPE = io.type;
-
-    if (OLD_TYPE == type) return;
-
-    io.type = type;
-    resetIOSocketValue(io);
-
-
-    handleEvent(Event{ EventType::IOTypeChanged, EventIOTypeChanged{ input, id, OLD_TYPE, type }});
-}

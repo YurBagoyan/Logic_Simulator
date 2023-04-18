@@ -12,6 +12,17 @@ constexpr int32_t const SOCKET_SIZE = SocketItem::SIZE;
 qreal const ROUNDED_SOCKET_SIZE = std::round(static_cast<qreal>(SOCKET_SIZE) / 10.0) * 10.0;
 qreal const ROUNDED_SOCKET_SIZE_2 = ROUNDED_SOCKET_SIZE / 2.0;
 
+QString nodetype2string(Node::Type a_type)
+{
+  switch (a_type) {
+    case Node::Type::Element: return "Element";
+    case Node::Type::Inputs: return "Inputs";
+    case Node::Type::Outputs: return "Outputs";
+  }
+
+  return "UNKNOWN TYPE";
+}
+
 bool value_type_allowed(uint8_t const a_flags, ValueType const a_type)
 {
     switch (a_type) {
@@ -21,7 +32,7 @@ bool value_type_allowed(uint8_t const a_flags, ValueType const a_type)
     }
 
     assert(false);
-    qDebug() << "MY WARNING: Returned ValueType Int in line 16 node.cpp";
+    qDebug() << "MY WARNING: Returned ValueType Int in line 24 node.cpp";
     return Element::IOSocket::CanHoldBool;;
 }
 
@@ -32,35 +43,25 @@ ValueType first_available_type_for_flags(const uint8_t flags)
     if (flags & Element::IOSocket::CanHoldFloat) return ValueType::Float;
 
     assert(false);
-    qDebug() << "MY WARNING: Returned ValueType Int in line 27 node.cpp";
+    qDebug() << "MY WARNING: Returned ValueType Int in line 35 node.cpp";
     return ValueType::Int;
 }
 
-QString nodeType2String(Node::Type type)
-{
-    switch (type) {
-        case Node::Type::Element: return "Element";
-        case Node::Type::Inputs: return "Inputs";
-        case Node::Type::Outputs: return "Outputs";
-    }
-
-    return "UNKNOWN TYPE";
-}
-
-Node::Node(QString iconPath, QGraphicsItem* parent)
+Node::Node(QGraphicsItem* parent)
     : QGraphicsItem{parent}
-    , m_iconPath{iconPath}
 {
     m_nameFont.setFamily("Consolas");
     m_nameFont.setPointSize(8);
 
     setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemSendsGeometryChanges);
     iconify();
-    expand();
 }
 
 Node::~Node()
 {
+    for (auto &input : m_inputs) input->disconnectAll();
+    for (auto &output : m_outputs) output->disconnectAll();
+
     if (m_element) {
         auto const package = m_element->package();
         package->remove(m_element);
@@ -80,7 +81,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     paintBorder(painter);
 
     if (!m_centralWidget || !m_centralWidget->isVisible())  {
-        //qDebug() << "Node.cpp line 52: m_centralWidget->isVisible()";
+        //qDebug() << "Node.cpp line 73: m_centralWidget->isVisible()";
         paintIcon(painter);
     }
 }
@@ -100,7 +101,7 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
             }
             m_graphicsView->setSelectedNode(lastSelected);
 
-            //m_graphicsView->showProperties();
+            m_graphicsView->showProperties();
             break;
         }
         case ItemPositionChange: {
@@ -210,7 +211,7 @@ void Node::paintIcon(QPainter *const a_painter)
 template<typename Container, class Comparator>
 auto max_element(Container &container, Comparator comparator)
 {
-  return std::max_element(std::begin(container), std::end(container), comparator);
+    return std::max_element(std::begin(container), std::end(container), comparator);
 }
 
 
@@ -312,6 +313,7 @@ void Node::handleEvent(Event const &event)
             calculateBoundingRect();
             break;
         }
+        case EventType::IONameChanged: break;
     }
 }
 
@@ -353,8 +355,14 @@ void Node::showCommonProperties()
     m_properties->setItem(row, 0, item);
 
     QLineEdit *nameEdit = new QLineEdit{ NAME };
+    QString nameLineStyle =  "QLineEdit {"
+                            "   background: #292a2b;"
+                            "   color: #dbdcdd;"
+                            "   border: transparent;"
+                            "}";
+    nameEdit->setStyleSheet(nameLineStyle);
     m_properties->setCellWidget(row, 1, nameEdit);
-    QObject::connect(nameEdit, &QLineEdit::textChanged, [this](QString const &a_text) { setName(a_text); });
+    QObject::connect(nameEdit, &QLineEdit::textChanged, [this](QString const &text) { setName(text); });
 }
 
 void Node::showIOProperties(const IOSocketsType type)
@@ -379,6 +387,13 @@ void Node::showIOProperties(const IOSocketsType type)
     m_properties->setItem(row, 0, item);
 
     auto const count = new QSpinBox;
+    QString spinBoxStyle =  "QSpinBox{"
+                            "    background: #292a2b;"
+                            "   color: #dbdcdd;"
+                            "   border: transparent;"
+                            "}";
+    count->setStyleSheet(spinBoxStyle);
+
     count->setRange(MIN_IOS_SIZE, MAX_IOS_SIZE);
     count->setValue(static_cast<int>(ios.size()));
     m_properties->setCellWidget(row, 1, count);
@@ -399,6 +414,13 @@ void Node::showIOProperties(const IOSocketsType type)
 
         if (IO.flags & Element::IOSocket::CanChangeName) {
             QLineEdit *const ioName{ new QLineEdit{ IO.name } };
+            QString lineStyle =  "QLineEdit {"
+                                    "   background: #292a2b;"
+                                    "   color: #dbdcdd;"
+                                    "   border: transparent;"
+                                    "}";
+            ioName->setStyleSheet(lineStyle);
+
             QObject::connect(ioName, &QLineEdit::editingFinished, [type, i, ioName, this]() {
                 m_element->setIOName(type == IOSocketsType::Inputs, static_cast<uint8_t>(i), ioName->text());
             });
@@ -410,6 +432,12 @@ void Node::showIOProperties(const IOSocketsType type)
         }
 
         auto const comboBox = new QComboBox;
+        QString const comboBoxStyle = "QComboBox {"
+                                      "     background: #292a2b;"
+                                      "     color: #dbdcdd;"
+                                      "     border: transparent;"
+                                      "}";
+        comboBox->setStyleSheet(comboBoxStyle);
         if (IO.flags & Element::IOSocket::CanHoldBool)
             comboBox->addItem(ValueType_to_QString(ValueType::Bool), static_cast<int>(ValueType::Bool));
         if (IO.flags & Element::IOSocket::CanHoldInt)
@@ -427,17 +455,41 @@ void Node::showIOProperties(const IOSocketsType type)
     }
 }
 
+void Node::changeInputName(const int id, const QString &name)
+{
+    changeIOName(IOSocketsType::Inputs, id, name);
+}
+
+void Node::changeOutputName(const int id, const QString &name)
+{
+    changeIOName(IOSocketsType::Outputs, id, name);
+}
+
 void Node::propertiesInsertTitle(QString const &title)
 {
     int const ROW = m_properties->rowCount();
     m_properties->insertRow(ROW);
-    QTableWidgetItem *const item{ new QTableWidgetItem{ title } };
+    QTableWidgetItem *const item = new QTableWidgetItem{ title };
     item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     item->setFlags(item->flags() & ~Qt::ItemIsEditable);
-    //item->setBackgroundColor(Qt::darkGray);
-    //item->setTextColor(Qt::black);
+    item->setBackground(QColor(64, 65, 66, 255));
+    item->setForeground(QColor(219, 220, 221, 255));
     m_properties->setItem(ROW, 0, item);
     m_properties->setSpan(ROW, 0, 1, 2);
+}
+
+void Node::changeIOName(const IOSocketsType type, const int id, const QString &name)
+{
+    bool const INPUTS{ type == IOSocketsType::Inputs };
+
+    SocketItem *socket{};
+    if (m_type == Type::Element)
+        socket = INPUTS ? m_inputs[id] : m_outputs[id];
+    else
+        socket = m_type == Type::Inputs ? m_outputs[id] : m_inputs[id];
+
+    socket->setName(name);
+    calculateBoundingRect();
 }
 
 
@@ -490,6 +542,14 @@ void Node::removeInput()
     m_graphicsView->showProperties();
 }
 
+void Node::setInputName(const uint8_t socketId, const QString &name)
+{
+    m_element->setInputName(socketId, name);
+    m_inputs[socketId]->setName(name);
+    calculateBoundingRect();
+    m_graphicsView->showProperties();
+}
+
 void Node::addOutput()
 {
     uint8_t const SIZE{ static_cast<uint8_t>(m_element->outputs().size()) };
@@ -504,6 +564,14 @@ void Node::addOutput()
 void Node::removeOutput()
 {
     m_element->removeOutput();
+    m_graphicsView->showProperties();
+}
+
+void Node::setOutputName(const uint8_t socketId, const QString &name)
+{
+    m_element->setOutputName(socketId, name);
+    m_outputs[socketId]->setName(name);
+    calculateBoundingRect();
     m_graphicsView->showProperties();
 }
 
@@ -619,8 +687,6 @@ void Node::setName(const QString& name)
 void Node::setIcon(const QString& iconPath)
 {
     m_iconPath = iconPath;
-    //QPixmap newIcon{iconPath};
-    //m_icon = newIcon;
     m_icon.load(iconPath);
 }
 
@@ -628,9 +694,11 @@ void Node::setElement(Element* const element)
 {
     if (m_element) return;
 
-    m_element = element;
-    m_type = Type::Element;
+    m_type = Type::Element;  // <====================
+    //qDebug() << "m_type = Type::Element: Node.cpp 697";
 
+
+    m_element = element;
     if (m_type == Type::Element)
         m_element->registerEventHandler([this](Event const &event) { handleEvent(event); });
 
@@ -677,8 +745,7 @@ void Node::setElement(Element* const element)
 
 void Node::setPropertiesTable(TableWidget * const properties)
 {
-    //qDebug() << "Maybe crush is here: Node.cpp 696";
-    //m_properties = properties;  //<============================
+    m_properties = properties;
 }
 
 void Node::setCentralWidget(QGraphicsItem *a_centralWidget)

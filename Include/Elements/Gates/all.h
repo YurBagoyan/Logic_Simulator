@@ -11,5 +11,4 @@
 #include <Include/Elements/Gates/xor.h>
 #include <Include/Elements/Gates/xnor.h>
 
-
 #endif // ALL_ELEMENTS_GATES_H

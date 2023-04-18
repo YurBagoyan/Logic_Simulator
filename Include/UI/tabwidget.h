@@ -5,16 +5,24 @@
 #include <QTabWidget>
 #include <QTabBar>
 #include <QLineEdit>
-#include "qevent.h"
+#include <QEvent>
 
+class MainWindow;
 
 class TabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
     TabWidget(QWidget* parent = nullptr);
+    void setMainWindow(MainWindow* const mainWindow) { m_mainWindow = mainWindow; }
     void closeTab(const int index);
-    void addNewTab();
+    void addNewTab(const QString tabName = "New Tab");
+private slots:
+    void createObject(const QString name, const QString iconPath, const QPointF pos);
+
+
+private:
+    MainWindow* m_mainWindow;
 };
 
 class TabBar : public QTabBar
@@ -23,6 +31,7 @@ class TabBar : public QTabBar
 
 public:
     TabBar(QWidget *parent = nullptr) : QTabBar(parent) { }
+
 
 private:
     void mouseDoubleClickEvent(QMouseEvent *event);

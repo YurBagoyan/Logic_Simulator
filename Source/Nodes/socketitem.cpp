@@ -36,8 +36,8 @@ SocketItem::SocketItem(Node* const node, const Type type)
         setAcceptDrops(true);
     }
 
-    m_colorSignalOn = get_color(Color::LinkLineColor);
-    m_colorSignalOff = get_color(Color::LinkLineColor);
+    m_colorSignalOn = get_color(Color::BoolSignalOn);
+    m_colorSignalOff = get_color(Color::BoolSignalOff);
 }
 
 QRectF SocketItem::boundingRect() const
@@ -57,21 +57,22 @@ void SocketItem::paint(QPainter *painter, QStyleOptionGraphicsItem const *option
     pen.setWidth(2);
 
     QBrush brush;
-    brush.setStyle(Qt::SolidPattern);
 
     if (m_isHover)
         brush.setColor(get_color(Color::SocketHover));
     else if (m_isDrop)
         brush.setColor(get_color(Color::SocketDrop));
-    else if (m_isSignalOn)
-        brush.setColor(m_colorSignalOn);
     else if (!m_isSignalOn)
         brush.setColor(m_colorSignalOff);
-    else if (m_type == Type::Input)
-        brush.setColor(get_color(Color::SocketInput));
-    else if (m_type == Type::Output)
-        brush.setColor(get_color(Color::SocketOutput));
+    else if (m_isSignalOn)
+        brush.setColor(m_colorSignalOn);
 
+//    else if (m_type == Type::Input)
+//        brush.setColor(get_color(Color::SocketInput));
+//    else if (m_type == Type::Output)
+//        brush.setColor(get_color(Color::SocketOutput));
+
+    brush.setStyle(Qt::SolidPattern);
     painter->setPen(pen);
     painter->setBrush(brush);
     if (m_type == Type::Output)
@@ -254,7 +255,7 @@ void SocketItem::dropEvent(QGraphicsSceneDragDropEvent* event)
     auto const package = graphicsView->package();
     auto const from = linkItem->from();
 
-    //package->connect(from->elementId(), from->socketId(), m_elementId, m_socketId);
+    package->connect(from->elementId(), from->socketId(), m_elementId, m_socketId);
 
     setSignal(linkItem->isSignalOn());
 }
@@ -359,8 +360,8 @@ void SocketItem::setValueType(const ValueType type)
     m_valueType = type;
 
     switch (m_valueType) {
-        case ValueType::Bool: setColors(get_color(Color::BoolSignalOn), get_color(Color::BoolSignalOff)); break;
-        case ValueType::Float: setColors(get_color(Color::FloatSignalOn), get_color(Color::FloatSignalOff)); break;
+        case ValueType::Bool: setColors(get_color(Color::BoolSignalOff), get_color(Color::BoolSignalOn)); break;
+        case ValueType::Float: setColors(get_color(Color::FloatSignalOff), get_color(Color::FloatSignalOn)); break;
         case ValueType::Int: setColors(get_color(Color::IntegerSignalOn), get_color(Color::IntegerSignalOn)); break;
     }
 }

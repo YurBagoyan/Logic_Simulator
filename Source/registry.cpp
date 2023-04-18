@@ -1,8 +1,7 @@
 #include "Include/registry.h"
 
-#include "Include/Elements/Gates/all.h"
-#include "Include/Elements/Timers/clock.h"
-
+#include "Include/Elements/all.h"
+#include "Include/Nodes/all.h"
 #include "Include/package.h"
 #include "Include/Nodes/nodePackage.h"
 
@@ -34,24 +33,44 @@ Registry &Registry::get()
 Registry::Registry()
     :   m_pimpl{ std::make_unique<PIMPL>() }
 {
-
+    registerInternalElements();
 }
 
 void Registry::registerInternalElements()
 {
     init_resources();
 
-    registerElement<Package, nodes::NodePackage>("Package", ":Docs/LogicIcons/package.png");
+    registerElement<Package, nodes::NodePackage>("Package", "");
 
-    registerElement<And>("AND (Bool)", ":Docs/GateIcons/AND.ico");
-    registerElement<Nand>("NAND (Bool)", ":Docs/GateIcons/NAND.ico");
-    registerElement<Nor>("NOR (Bool)", ":Docs/GateIcons/NOR.ico");
-    registerElement<Not>("NOT (Bool)", ":Docs/GateIcons/NOT.ico");
-    registerElement<Or>("OR (Bool)", ":Docs/GateIcons/OR.ico");
-    registerElement<Xnor>("XNOR (Bool)", ":Docs/GateIcons/XNOR.ico");
-    registerElement<Xor>("XOR (Bool)", ":Docs/GateIcons/XOR.ico");
+    using namespace elements;
 
-    registerElement<Clock>("Delta Time (ms)", ":Docs/GateIcons/CLOCK.ico");
+    registerElement<gates::And>("AND", ":Docs/GateIcons/AND.ico");
+    registerElement<gates::Nand>("NAND", ":Docs/GateIcons/NAND.ico");
+    registerElement<gates::Nor>("NOR", ":Docs/GateIcons/NOR.ico");
+    registerElement<gates::Not>("NOT", ":Docs/GateIcons/NOT.ico");
+    registerElement<gates::Or>("OR", ":Docs/GateIcons/OR.ico");
+    registerElement<gates::Xnor>("XNOR", ":Docs/GateIcons/XNOR.ico");
+    registerElement<gates::Xor>("XOR", ":Docs/GateIcons/XOR.ico");
+
+    registerElement<timers::Clock, nodes::timers::Clock>("CLOCK", ":Docs/GateIcons/CLOCK.ico");
+
+    registerElement<logic::Multiplexer>("Multiplexer", ":Docs/LogicIcons/Multiplexer.ico");
+    registerElement<logic::Demultiplexer>("Demultiplexer", ":Docs/LogicIcons/Demultiplexer.ico");
+
+    registerElement<Ui::IntInfo, nodes::Ui::IntInfo>("Output (Int)", ":Docs/UiIcons/const_int.png");
+    registerElement<Ui::ToggleButton, nodes::Ui::ToggleButton>("Toggle Button", ":Docs/UiIcons/toggle_button.png");
+    //registerElement<Ui::SevenSegmentDisplay, nodes::Ui::SevenSegmentDisplay>("7 Segment Display", ":Docs/UiIcons/7_segment_display.png");
+    //registerElement<Ui::BCDToSevenSegmentDisplay>("BCD To Seven Segment Display", ":Docs/UiIcons/BCD_to_7_segment.png");
+    registerElement<Ui::PushButton, nodes::Ui::PushButton>("Push Button", ":Docs/UiIcons/push_button.png");
+
+    //registerElement<values::ConstBool, nodes::values::ConstBool>("Boolean", ":Docs/UiIcons/const_bool.png");
+    registerElement<values::ConstInt, nodes::values::ConstInt>("Input (Int)", ":Docs/UiIcons/const_int.png");
+    registerElement<values::BCD>("BCD", ":Docs/UiIcons/BCD.png");
+
+    registerElement<values::OutputBool, nodes::values::OutputBool>("Output (Bool)", ":Docs/UiIcons/const_bool.png");
+
+    registerElement<values::RandomBool>("Trigger (Random Bool)", ":Docs/UiIcons/random_bool.png");
+    //registerElement<logic::Switch, nodes::logic::Switch>("Switch (Int)", ":/logic/switch.png");
 
 }
 

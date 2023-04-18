@@ -2,6 +2,7 @@
 #define ELEMENT_H
 
 #include <chrono>
+#include <cstdint>
 #include <string>
 #include <QString>
 
@@ -114,19 +115,7 @@ public:
     void removeOutput();
     void clearOutputs();
 
-    void registerEventHandler(EventCallback const &a_handler) { m_handler = a_handler; }
-
-protected:
-    void handleEvent(Event const &event);
-    virtual void onEvent(Event const &event) { (void)event; }
-
-    void setMinInputs(uint8_t const a_min);
-    void setMaxInputs(uint8_t const a_max);
-    void setDefaultNewInputFlags(uint8_t const a_flags) { m_defaultNewInputFlags = a_flags; }
-
-    void setMinOutputs(uint8_t const a_min);
-    void setMaxOutputs(uint8_t const a_max);
-    void setDefaultNewOutputFlags(uint8_t const a_flags) { m_defaultNewOutputFlags = a_flags; }
+    void registerEventHandler(EventCallback const &handler) { m_handler = handler; }
 
 public: /// Seters and geters
     void setID(size_t id) {m_id = id;};
@@ -135,7 +124,7 @@ public: /// Seters and geters
     void setPackage(Package* package) {m_package = package;};
     void setPosition(double const x, double const y);
     void setPosition(VecToD const &position) { m_position = position; }
-    void setIconifyingHidesCentralWidget(bool const a_hide) { m_iconifyingHidesCentralWidget = a_hide; }
+    void setIconifyingHidesCentralWidget(bool const hide) { m_iconifyingHidesCentralWidget = hide; }
 
     size_t id() const noexcept { return m_id; }
     QString name() const noexcept { return m_name; }
@@ -158,6 +147,24 @@ public: /// Seters and geters
     void setIOValueType(bool const input, uint8_t const id, ValueType const type);
 
     void resetIOSocketValue(IOSocket &io);
+
+    template<typename T>
+    T *node()
+    {
+      return static_cast<T *>(m_node);
+    }
+
+protected:
+    void handleEvent(Event const &event);
+    virtual void onEvent(Event const &event) { (void)event; }
+
+    void setMinInputs(uint8_t const min);
+    void setMaxInputs(uint8_t const max);
+    void setDefaultNewInputFlags(uint8_t const flags) { m_defaultNewInputFlags = flags; }
+
+    void setMinOutputs(uint8_t const min);
+    void setMaxOutputs(uint8_t const max);
+    void setDefaultNewOutputFlags(uint8_t const flags) { m_defaultNewOutputFlags = flags; }
 
 public:
     IOSockets m_inputs{};

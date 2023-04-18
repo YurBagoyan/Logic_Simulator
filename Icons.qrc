@@ -43,7 +43,15 @@
         <file>Docs/LogicIcons/outputs.png</file>
         <file>Docs/LogicIcons/Unknown.ico</file>
         <file>Docs/LogicIcons/package.png</file>
-        <file>Docs/LogicIcons/DEMULTIPLEXER.ico</file>
-        <file>Docs/LogicIcons/MULTIPLEXER.ico</file>
+        <file>Docs/LogicIcons/Demultiplexer.ico</file>
+        <file>Docs/LogicIcons/Multiplexer.ico</file>
+        <file>Docs/UiIcons/const_bool.png</file>
+        <file>Docs/UiIcons/const_int.png</file>
+        <file>Docs/UiIcons/push_button.png</file>
+        <file>Docs/UiIcons/toggle_button.png</file>
+        <file>Docs/UiIcons/7_segment_display.png</file>
+        <file>Docs/UiIcons/BCD.png</file>
+        <file>Docs/UiIcons/BCD_to_7_segment.png</file>
+        <file>Docs/UiIcons/random_bool.png</file>
     </qresource>
 </RCC>

@@ -1,5 +1,7 @@
 #include "Include/Elements/Logic/multiplexer.h"
 
+namespace elements::logic {
+
 Multiplexer::Multiplexer()
   : Element{}
 {
@@ -25,3 +27,5 @@ void Multiplexer::calculate()
 
     m_outputs[0].value = VALUE;
 }
+
+} // namespace elements::logic

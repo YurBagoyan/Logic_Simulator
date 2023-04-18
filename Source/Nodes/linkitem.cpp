@@ -26,7 +26,6 @@ void LinkItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     (void)widget;
 
     QColor  signalColor{ (m_isSignalOn ? m_colorSignalOn : m_colorSignalOff) };
-    signalColor = get_color(Color::LinkLineColor);
     QColor const notActive{ (isSelected() ? get_color(Color::Selected) : signalColor) };
     QColor const hover{ get_color(Color::SocketHover) };
 
@@ -139,7 +138,9 @@ void LinkItem::trackNodes()
 
     QPointF c1{}, c2{};
 
-    double dist{ fabs(m_toPoint.x()) * 0.5 };
+
+    //double dist{ fabs(m_toPoint.x()) * 0.5 };
+    double dist{ fabs(m_toPoint.x()) * 0 };
 
     c1.setX(dist);
 
